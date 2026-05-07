@@ -28,8 +28,9 @@ After creating your repo:
 
 1. Rename the crate in `Cargo.toml` (`[package].name`, `repository`).
 2. Rename `McpServerHandler` in `src/server/handler.rs` (and its re-exports in `src/server/mod.rs` and `src/lib.rs`) to match your server's domain.
-3. Update this README.
-4. Replace the `ping` example tool in `src/tools/` with your real tools.
+3. Sweep crate-name references in source: `grep -rn rust_mcp_server_template src tests` will surface `src/main.rs`, `tests/ping_tool.rs`, and the binary-name strings in `src/config.rs` tests. Update each to your new crate name (with hyphens for the package name, underscores for the module identifier).
+4. Update this README.
+5. Replace the `ping` example tool in `src/tools/` with your real tools.
 
 ## Adding a tool
 
