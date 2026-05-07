@@ -1,0 +1,11 @@
+/target
+.env
+.env.*
+!.env.example
+
+# Editor scratch
+.DS_Store
+*.swp
+*.swo
+.idea/
+.vscode/

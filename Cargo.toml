@@ -1,0 +1,58 @@
+[package]
+name = "rust-mcp-server-template"
+version = "0.1.0"
+edition = "2024"
+description = "Forkable Rust template for Model Context Protocol (MCP) servers, supporting stdio and streamable-HTTP transports."
+repository = "https://github.com/shoehn/rust-mcp-server-template"
+license = "AGPL-3.0-or-later"
+readme = "README.md"
+keywords = ["mcp", "rmcp", "ai", "tool-use", "template"]
+categories = ["network-programming", "api-bindings", "development-tools"]
+
+[dependencies]
+anyhow = "1.0.102"
+clap = { version = "4.5", features = ["derive", "env"] }
+rmcp = { version = "1.6.0", features = [
+    "server",
+    "macros",
+    "transport-io",
+    "transport-streamable-http-server",
+] }
+schemars = "1.0"
+serde = { version = "1.0.228", features = ["derive"] }
+serde_json = "1.0.149"
+tokio = { version = "1.52.2", features = [
+    "macros",
+    "rt-multi-thread",
+    "signal",
+    "io-std",
+    "net",
+] }
+tokio-util = "0.7"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "fmt", "json"] }
+hyper = { version = "1", features = ["server"] }
+hyper-util = { version = "0.1", features = ["tokio", "server", "server-auto"] }
+tower-service = "0.3"
+
+[dev-dependencies]
+tokio = { version = "1.52.2", features = ["io-util", "macros", "rt-multi-thread"] }
+# `client` feature is needed only by the integration test, which drives a
+# round-trip tool call through an in-process MCP client/server pair.
+rmcp = { version = "1.6.0", features = ["client"] }
+
+[lints.clippy]
+# Enable default clippy groups
+all = { level = "warn", priority = -1 }
+pedantic = { level = "warn", priority = -1 }
+
+# Deny common foot-guns at workspace level. Tests opt back in
+# explicitly with #[allow(clippy::unwrap_used, clippy::expect_used)].
+unwrap_used = "deny"
+expect_used = "deny"
+
+# Pedantic lints that fight the rmcp/derive style with no payoff:
+module_name_repetitions = "allow"
+missing_errors_doc = "allow"
+missing_panics_doc = "allow"
+must_use_candidate = "allow"
