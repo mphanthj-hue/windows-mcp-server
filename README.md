@@ -1,65 +1,113 @@
-# rust-mcp-server-template
+# Windows MCP Server
 
-A forkable starting point for [Model Context Protocol](https://modelcontextprotocol.io)
-servers in Rust. Single binary, two transports (stdio + streamable-HTTP),
-one example tool, real tests, real CI. Built on the
-[`rmcp`](https://crates.io/crates/rmcp) SDK.
+A comprehensive Rust-based MCP (Model Context Protocol) server providing **27 tools** for complete Windows system management.
 
-## Quickstart
+## Tools
+
+| Category | Tools | Implementation |
+|----------|-------|----------------|
+| **Process** | `list_processes`, `kill_process`, `start_process` | sysinfo crate |
+| **Service** | `list_services`, `start_service`, `stop_service`, `restart_service` | PowerShell |
+| **Disk** | `disk_info`, `cleanup_disk` | PowerShell |
+| **Network** | `network_adapters`, `ping_host`, `network_connections` | PowerShell |
+| **Event Log** | `read_event_log`, `clear_event_log` | PowerShell |
+| **Performance** | `performance` | sysinfo crate |
+| **Registry** | `read_registry`, `write_registry` | PowerShell |
+| **Startup** | `list_startup` | PowerShell |
+| **User** | `list_users`, `list_groups` | PowerShell |
+| **Task** | `list_tasks`, `run_task` | PowerShell |
+| **Windows Update** | `check_updates`, `install_updates` | COM Interop |
+| **Hardware Info** | `hardware_info` | WMI |
+| **System** | `system_info`, `ping` | sysinfo crate |
+
+## Quick Start
 
 ```bash
-# stdio (default — suitable for Claude Desktop / Claude Code / any local MCP client)
-cargo run
+# Build
+cargo build --release
 
-# streamable-HTTP, loopback:8080
-cargo run -- --transport http
+# Run (stdio transport)
+./target/release/windows-mcp-server.exe --transport stdio
+
+# Run (HTTP transport)
+./target/release/windows-mcp-server.exe --transport http --bind 127.0.0.1:3000
 ```
 
-## Using this template
+## Integration
 
-Click **Use this template** on GitHub to create a new repo from this
-scaffold, or run:
+### OpenCode
 
-```bash
-gh repo create my-mcp-server --template shoehn/rust-mcp-server-template --public
+Add to `~/.config/opencode/opencode.json`:
+
+```json
+{
+  "mcp": {
+    "windows-mcp": {
+      "type": "local",
+      "command": ["C:\\path\\to\\windows-mcp-server.exe"],
+      "enabled": true,
+      "timeout": 60000
+    }
+  }
+}
 ```
 
-After creating your repo:
+### Claude Desktop
 
-1. Rename the crate in `Cargo.toml` (`[package].name`, `repository`).
-2. Rename `McpServerHandler` in `src/server/handler.rs` (and its re-exports in `src/server/mod.rs` and `src/lib.rs`) to match your server's domain.
-3. Sweep crate-name references in source: `grep -rn rust_mcp_server_template src tests` will surface `src/main.rs`, `tests/ping_tool.rs`, and the binary-name strings in `src/config.rs` tests. Update each to your new crate name (with hyphens for the package name, underscores for the module identifier).
-4. Update this README.
-5. Replace the `ping` example tool in `src/tools/` with your real tools.
+Add to Claude Desktop config:
 
-## Adding a tool
+```json
+{
+  "mcpServers": {
+    "windows-mcp": {
+      "command": "C:\\path\\to\\windows-mcp-server.exe",
+      "args": ["--transport", "stdio"]
+    }
+  }
+}
+```
 
-1. Create `src/tools/<name>.rs` with `Args` + `Output` types deriving
-   `Deserialize+JsonSchema` / `Serialize+JsonSchema`.
-2. Add a `pub mod <name>;` line in `src/tools/mod.rs`.
-3. Add a `#[tool(name = "...", description = "...")]` method on
-   your handler struct in `src/server/handler.rs` that delegates to the
-   pure handler in your new file.
+## CLI Options
 
-The `#[tool_router]` macro picks it up automatically — no other wiring.
+| Flag | Default | Description |
+|------|---------|-------------|
+| `--transport` | `stdio` | Transport type: `stdio` or `http` |
+| `--bind` | `127.0.0.1:8080` | Bind address for HTTP |
+| `--log-format` | `pretty` | Log format: `pretty` or `json` |
 
-## CLI
+## Architecture
 
-| Flag                        | Env var          | Default          |
-| --------------------------- | ---------------- | ---------------- |
-| `--transport stdio\|http`   | `MCP_TRANSPORT`  | `stdio`          |
-| `--bind <addr>`             | `MCP_BIND`       | `127.0.0.1:8080` |
-| `--log-format pretty\|json` | `MCP_LOG_FORMAT` | `pretty`         |
+```
+src/
+├── main.rs                 # Entry point
+├── config.rs               # CLI + Config
+├── transport/              # stdio + HTTP
+├── server/
+│   └── handler.rs          # 27 tool handlers
+└── tools/
+    ├── process.rs          # Process management
+    ├── service.rs          # Service management
+    ├── disk.rs             # Disk operations
+    ├── network.rs          # Network operations
+    ├── eventlog.rs         # Event log
+    ├── performance.rs      # Performance metrics
+    ├── registry.rs         # Registry operations
+    ├── startup.rs          # Startup programs
+    ├── user.rs             # User/Group management
+    ├── task.rs             # Scheduled tasks
+    ├── system.rs           # System info
+    ├── windowsupdate.rs    # Windows Update
+    └── sysinfo_advanced.rs # Hardware details (WMI)
+```
 
 ## Development
 
 ```bash
-just test    # cargo test --all-targets
-just lint    # cargo clippy --all-targets -- -D warnings
-just fmt     # cargo fmt --all
-just ci      # fmt --check + clippy + test
+cargo test                 # Run 41 tests
+cargo clippy --all-targets # Lint
+cargo fmt --all            # Format
 ```
 
 ## License
 
-[AGPL-3.0-or-later](LICENSE)
+MIT
