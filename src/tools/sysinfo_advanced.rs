@@ -9,20 +9,20 @@ pub struct HardwareInfoArgs {}
 #[derive(Debug, Serialize, JsonSchema)]
 pub struct CpuDetail {
     pub name: String,
-    pub cores: u32,
-    pub logical_processors: u32,
-    pub max_clock_mhz: u32,
-    pub current_clock_mhz: u32,
-    pub l2_cache_kb: u32,
-    pub l3_cache_kb: u32,
+    pub cores: i32,
+    pub logical_processors: i32,
+    pub max_clock_mhz: i32,
+    pub current_clock_mhz: i32,
+    pub l2_cache_kb: i32,
+    pub l3_cache_kb: i32,
 }
 
 #[derive(Debug, Serialize, JsonSchema)]
 pub struct MemoryDetail {
     pub total_gb: f64,
-    pub slots_used: u32,
+    pub slots_used: i32,
     pub form_factor: String,
-    pub speed_mhz: u32,
+    pub speed_mhz: i32,
     pub manufacturer: String,
     pub part_number: String,
 }
@@ -78,12 +78,12 @@ pub fn hardware_info_inner(_args: HardwareInfoArgs) -> HardwareInfoOutput {
         .filter_map(|v| {
             Some(CpuDetail {
                 name: v["Name"].as_str().unwrap_or("Unknown").to_string(),
-                cores: v["NumberOfCores"].as_u64().unwrap_or(0) as u32,
-                logical_processors: v["NumberOfLogicalProcessors"].as_u64().unwrap_or(0) as u32,
-                max_clock_mhz: v["MaxClockSpeed"].as_u64().unwrap_or(0) as u32,
-                current_clock_mhz: v["CurrentClockSpeed"].as_u64().unwrap_or(0) as u32,
-                l2_cache_kb: v["L2CacheSize"].as_u64().unwrap_or(0) as u32,
-                l3_cache_kb: v["L3CacheSize"].as_u64().unwrap_or(0) as u32,
+                cores: v["NumberOfCores"].as_i64().unwrap_or(0) as i32,
+                logical_processors: v["NumberOfLogicalProcessors"].as_i64().unwrap_or(0) as i32,
+                max_clock_mhz: v["MaxClockSpeed"].as_i64().unwrap_or(0) as i32,
+                current_clock_mhz: v["CurrentClockSpeed"].as_i64().unwrap_or(0) as i32,
+                l2_cache_kb: v["L2CacheSize"].as_i64().unwrap_or(0) as i32,
+                l3_cache_kb: v["L3CacheSize"].as_i64().unwrap_or(0) as i32,
             })
         })
         .collect();
@@ -106,7 +106,7 @@ pub fn hardware_info_inner(_args: HardwareInfoArgs) -> HardwareInfoOutput {
                 total_gb: size_gb,
                 slots_used: 1,
                 form_factor: form_factor.to_string(),
-                speed_mhz: v["Speed"].as_u64().unwrap_or(0) as u32,
+                speed_mhz: v["Speed"].as_i64().unwrap_or(0) as i32,
                 manufacturer: v["Manufacturer"].as_str().unwrap_or("Unknown").to_string(),
                 part_number: v["PartNumber"].as_str().unwrap_or("Unknown").to_string(),
             })

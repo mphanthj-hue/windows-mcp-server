@@ -13,7 +13,7 @@ pub struct ReadEventLogArgs {
 #[derive(Debug, Serialize, JsonSchema)]
 pub struct EventLogEntry {
     pub time_created: String,
-    pub id: u32,
+    pub id: i32,
     pub level: String,
     pub source: String,
     pub message: String,
@@ -22,7 +22,7 @@ pub struct EventLogEntry {
 #[derive(Debug, Serialize, JsonSchema)]
 pub struct ReadEventLogOutput {
     pub entries: Vec<EventLogEntry>,
-    pub total_count: usize,
+    pub total_count: i32,
 }
 
 pub fn read_event_log_inner(args: ReadEventLogArgs) -> ReadEventLogOutput {
@@ -65,7 +65,7 @@ pub fn read_event_log_inner(args: ReadEventLogArgs) -> ReadEventLogOutput {
                 };
                 Some(EventLogEntry {
                     time_created: time,
-                    id: v["Id"].as_u64().unwrap_or(0) as u32,
+                    id: v["Id"].as_i64().unwrap_or(0) as i32,
                     level: v["LevelDisplayName"].as_str().unwrap_or("Unknown").to_string(),
                     source: v["ProviderName"].as_str().unwrap_or("Unknown").to_string(),
                     message: truncated,
@@ -76,7 +76,7 @@ pub fn read_event_log_inner(args: ReadEventLogArgs) -> ReadEventLogOutput {
         Vec::new()
     };
 
-    let total_count = entries.len();
+    let total_count = entries.len() as i32;
     ReadEventLogOutput {
         entries,
         total_count,

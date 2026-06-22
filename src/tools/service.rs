@@ -20,7 +20,7 @@ pub struct ServiceInfo {
 #[derive(Debug, Serialize, JsonSchema)]
 pub struct ListServicesOutput {
     pub services: Vec<ServiceInfo>,
-    pub total_count: usize,
+    pub total_count: i32,
 }
 
 pub fn list_services_inner(args: ListServicesArgs) -> ListServicesOutput {
@@ -75,7 +75,7 @@ pub fn list_services_inner(args: ListServicesArgs) -> ListServicesOutput {
 
     filtered.sort_by(|a, a2| a.name.cmp(&a2.name));
 
-    let total_count = filtered.len();
+    let total_count = filtered.len() as i32;
     ListServicesOutput {
         services: filtered,
         total_count,

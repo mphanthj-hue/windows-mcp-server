@@ -20,7 +20,7 @@ pub struct DiskInfo {
 #[derive(Debug, Serialize, JsonSchema)]
 pub struct DiskInfoOutput {
     pub disks: Vec<DiskInfo>,
-    pub total_disks: usize,
+    pub total_disks: i32,
 }
 
 pub fn disk_info_inner(_args: DiskInfoArgs) -> DiskInfoOutput {
@@ -77,7 +77,7 @@ pub fn disk_info_inner(_args: DiskInfoArgs) -> DiskInfoOutput {
         Vec::new()
     };
 
-    let total_disks = disks.len();
+    let total_disks = disks.len() as i32;
     DiskInfoOutput {
         disks,
         total_disks,

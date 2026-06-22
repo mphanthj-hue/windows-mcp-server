@@ -9,8 +9,8 @@ pub struct SystemInfoArgs {}
 pub struct SystemInfoOutput {
     pub hostname: String,
     pub os_version: String,
-    pub total_memory_mb: u64,
-    pub cpu_count: u32,
+pub total_memory_mb: i64,
+pub cpu_count: i32,
 }
 
 pub fn system_info_inner(_args: SystemInfoArgs) -> anyhow::Result<SystemInfoOutput> {
@@ -33,8 +33,8 @@ pub fn system_info_inner(_args: SystemInfoArgs) -> anyhow::Result<SystemInfoOutp
     Ok(SystemInfoOutput {
         hostname,
         os_version,
-        total_memory_mb: total_memory,
-        cpu_count,
+        total_memory_mb: total_memory as i64,
+        cpu_count: cpu_count as i32,
     })
 }
 

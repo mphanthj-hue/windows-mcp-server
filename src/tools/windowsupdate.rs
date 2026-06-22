@@ -18,7 +18,7 @@ pub struct UpdateInfo {
 #[derive(Debug, Serialize, JsonSchema)]
 pub struct CheckUpdatesOutput {
     pub updates: Vec<UpdateInfo>,
-    pub total_count: usize,
+    pub total_count: i32,
     pub has_updates: bool,
 }
 
@@ -86,7 +86,7 @@ pub fn check_updates_inner(_args: CheckUpdatesArgs) -> CheckUpdatesOutput {
     };
 
     let has_updates = !updates.is_empty();
-    let total_count = updates.len();
+    let total_count = updates.len() as i32;
     CheckUpdatesOutput {
         updates,
         total_count,
@@ -103,7 +103,7 @@ pub struct InstallUpdatesArgs {
 pub struct InstallUpdatesOutput {
     pub success: bool,
     pub message: String,
-    pub installed_count: u32,
+    pub installed_count: i32,
 }
 
 pub fn install_updates_inner(args: InstallUpdatesArgs) -> InstallUpdatesOutput {
@@ -150,7 +150,7 @@ pub fn install_updates_inner(args: InstallUpdatesArgs) -> InstallUpdatesOutput {
             installed_count: 0,
         }
     } else if let Some(count_str) = stdout.lines().find(|l| l.starts_with("INSTALLED:")) {
-        let count: u32 = count_str.strip_prefix("INSTALLED:").unwrap_or("0").parse().unwrap_or(0);
+        let count: i32 = count_str.strip_prefix("INSTALLED:").unwrap_or("0").parse().unwrap_or(0);
         InstallUpdatesOutput {
             success: true,
             message: format!("{} updates installed successfully", count),

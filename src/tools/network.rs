@@ -12,7 +12,7 @@ pub struct NetworkAdapter {
     pub description: String,
     pub mac_address: String,
     pub status: String,
-    pub speed_mbps: u64,
+    pub speed_mbps: i64,
     pub ipv4_addresses: Vec<String>,
     pub ipv6_addresses: Vec<String>,
 }
@@ -20,7 +20,7 @@ pub struct NetworkAdapter {
 #[derive(Debug, Serialize, JsonSchema)]
 pub struct NetworkAdaptersOutput {
     pub adapters: Vec<NetworkAdapter>,
-    pub total_count: usize,
+    pub total_count: i32,
 }
 
 pub fn network_adapters_inner(_args: NetworkAdaptersArgs) -> NetworkAdaptersOutput {
@@ -65,7 +65,7 @@ pub fn network_adapters_inner(_args: NetworkAdaptersArgs) -> NetworkAdaptersOutp
                     .collect();
 
                 let speed_str = v["LinkSpeed"].as_str().unwrap_or("0 Mbps");
-                let speed: u64 = speed_str
+                let speed: i64 = speed_str
                     .chars()
                     .take_while(|c| c.is_ascii_digit())
                     .collect::<String>()
@@ -87,7 +87,7 @@ pub fn network_adapters_inner(_args: NetworkAdaptersArgs) -> NetworkAdaptersOutp
         Vec::new()
     };
 
-    let total_count = adapters.len();
+    let total_count = adapters.len() as i32;
     NetworkAdaptersOutput {
         adapters,
         total_count,
@@ -105,8 +105,8 @@ pub struct PingOutput {
     pub host: String,
     pub success: bool,
     pub average_ms: Option<f64>,
-    pub packets_sent: u32,
-    pub packets_received: u32,
+    pub packets_sent: i32,
+    pub packets_received: i32,
 }
 
 pub fn ping_inner(args: PingArgs) -> PingOutput {
@@ -153,9 +153,9 @@ pub struct NetworkConnectionsArgs {}
 #[derive(Debug, Serialize, JsonSchema)]
 pub struct NetworkConnection {
     pub local_address: String,
-    pub local_port: u16,
+    pub local_port: i16,
     pub remote_address: String,
-    pub remote_port: u16,
+    pub remote_port: i16,
     pub state: String,
     pub process_name: String,
 }
@@ -163,7 +163,7 @@ pub struct NetworkConnection {
 #[derive(Debug, Serialize, JsonSchema)]
 pub struct NetworkConnectionsOutput {
     pub connections: Vec<NetworkConnection>,
-    pub total_count: usize,
+    pub total_count: i32,
 }
 
 pub fn network_connections_inner(_args: NetworkConnectionsArgs) -> NetworkConnectionsOutput {
@@ -202,9 +202,9 @@ pub fn network_connections_inner(_args: NetworkConnectionsArgs) -> NetworkConnec
 
                 Some(NetworkConnection {
                     local_address: v["LocalAddress"].as_str().unwrap_or("").to_string(),
-                    local_port: v["LocalPort"].as_u64().unwrap_or(0) as u16,
+                    local_port: v["LocalPort"].as_i64().unwrap_or(0) as i16,
                     remote_address: v["RemoteAddress"].as_str().unwrap_or("").to_string(),
-                    remote_port: v["RemotePort"].as_u64().unwrap_or(0) as u16,
+                    remote_port: v["RemotePort"].as_i64().unwrap_or(0) as i16,
                     state: v["State"].as_str().unwrap_or("Unknown").to_string(),
                     process_name,
                 })
@@ -214,7 +214,7 @@ pub fn network_connections_inner(_args: NetworkConnectionsArgs) -> NetworkConnec
         Vec::new()
     };
 
-    let total_count = connections.len();
+    let total_count = connections.len() as i32;
     NetworkConnectionsOutput {
         connections,
         total_count,

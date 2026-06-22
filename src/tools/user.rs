@@ -17,7 +17,7 @@ pub struct UserInfo {
 #[derive(Debug, Serialize, JsonSchema)]
 pub struct ListUsersOutput {
     pub users: Vec<UserInfo>,
-    pub total_count: usize,
+    pub total_count: i32,
 }
 
 pub fn list_users_inner(_args: ListUsersArgs) -> ListUsersOutput {
@@ -60,7 +60,7 @@ pub fn list_users_inner(_args: ListUsersArgs) -> ListUsersOutput {
         Vec::new()
     };
 
-    let total_count = users.len();
+    let total_count = users.len() as i32;
     ListUsersOutput {
         users,
         total_count,
@@ -79,7 +79,7 @@ pub struct GroupInfo {
 #[derive(Debug, Serialize, JsonSchema)]
 pub struct ListGroupsOutput {
     pub groups: Vec<GroupInfo>,
-    pub total_count: usize,
+    pub total_count: i32,
 }
 
 pub fn list_groups_inner(_args: ListGroupsArgs) -> ListGroupsOutput {
@@ -118,7 +118,7 @@ pub fn list_groups_inner(_args: ListGroupsArgs) -> ListGroupsOutput {
         Vec::new()
     };
 
-    let total_count = groups.len();
+    let total_count = groups.len() as i32;
     ListGroupsOutput {
         groups,
         total_count,

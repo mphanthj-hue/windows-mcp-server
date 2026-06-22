@@ -9,7 +9,7 @@ pub struct PerformanceArgs {}
 #[derive(Debug, Serialize, JsonSchema)]
 pub struct CpuInfo {
     pub usage_percent: f64,
-    pub core_count: usize,
+    pub core_count: i32,
     pub brand: String,
 }
 
@@ -23,8 +23,8 @@ pub struct MemoryInfo {
 
 #[derive(Debug, Serialize, JsonSchema)]
 pub struct DiskIoInfo {
-    pub read_bytes_per_sec: u64,
-    pub write_bytes_per_sec: u64,
+    pub read_bytes_per_sec: i64,
+    pub write_bytes_per_sec: i64,
 }
 
 #[derive(Debug, Serialize, JsonSchema)]
@@ -37,7 +37,7 @@ pub struct PerformanceOutput {
 #[derive(Debug, Serialize, JsonSchema)]
 pub struct TopProcess {
     pub name: String,
-    pub memory_mb: u64,
+    pub memory_mb: i64,
     pub cpu_usage: f32,
 }
 
@@ -52,7 +52,7 @@ pub fn performance_inner(_args: PerformanceArgs) -> PerformanceOutput {
 
     let cpu_info = CpuInfo {
         usage_percent: sys.global_cpu_info().cpu_usage() as f64,
-        core_count: sys.cpus().len(),
+        core_count: sys.cpus().len() as i32,
         brand: sys.cpus().first().map(|c| c.brand().to_string()).unwrap_or_default(),
     };
 
@@ -77,7 +77,7 @@ pub fn performance_inner(_args: PerformanceArgs) -> PerformanceOutput {
         .iter()
         .map(|(_, process)| TopProcess {
             name: process.name().to_string(),
-            memory_mb: process.memory() / 1024 / 1024,
+            memory_mb: process.memory() as i64 / 1024 / 1024,
             cpu_usage: process.cpu_usage(),
         })
         .collect();

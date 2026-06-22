@@ -17,7 +17,7 @@ pub struct TaskInfo {
 #[derive(Debug, Serialize, JsonSchema)]
 pub struct ListTasksOutput {
     pub tasks: Vec<TaskInfo>,
-    pub total_count: usize,
+    pub total_count: i32,
 }
 
 pub fn list_tasks_inner(_args: ListTasksArgs) -> ListTasksOutput {
@@ -60,7 +60,7 @@ pub fn list_tasks_inner(_args: ListTasksArgs) -> ListTasksOutput {
         Vec::new()
     };
 
-    let total_count = tasks.len();
+    let total_count = tasks.len() as i32;
     ListTasksOutput {
         tasks,
         total_count,

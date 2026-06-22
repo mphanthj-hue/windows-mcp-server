@@ -10,17 +10,17 @@ pub struct ListProcessesArgs {
 
 #[derive(Debug, Serialize, JsonSchema)]
 pub struct ProcessInfo {
-    pub pid: u32,
+    pub pid: i32,
     pub name: String,
     pub status: String,
-    pub memory_mb: u64,
+    pub memory_mb: i64,
     pub cpu_usage: f32,
 }
 
 #[derive(Debug, Serialize, JsonSchema)]
 pub struct ListProcessesOutput {
     pub processes: Vec<ProcessInfo>,
-    pub total_count: usize,
+    pub total_count: i32,
 }
 
 pub fn list_processes_inner(args: ListProcessesArgs) -> ListProcessesOutput {
@@ -32,10 +32,10 @@ pub fn list_processes_inner(args: ListProcessesArgs) -> ListProcessesOutput {
         .iter()
         .map(|(pid, process)| {
             ProcessInfo {
-                pid: pid.as_u32(),
+                pid: pid.as_u32() as i32,
                 name: process.name().to_string(),
                 status: format!("{:?}", process.status()),
-                memory_mb: process.memory() / 1024 / 1024,
+                memory_mb: process.memory() as i64 / 1024 / 1024,
                 cpu_usage: process.cpu_usage(),
             }
         })
@@ -48,7 +48,7 @@ pub fn list_processes_inner(args: ListProcessesArgs) -> ListProcessesOutput {
 
     processes.sort_by(|a, b| b.memory_mb.cmp(&a.memory_mb));
 
-    let total_count = processes.len();
+    let total_count = processes.len() as i32;
     ListProcessesOutput {
         processes,
         total_count,

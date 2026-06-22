@@ -16,7 +16,7 @@ pub struct StartupEntry {
 #[derive(Debug, Serialize, JsonSchema)]
 pub struct ListStartupOutput {
     pub entries: Vec<StartupEntry>,
-    pub total_count: usize,
+    pub total_count: i32,
 }
 
 pub fn list_startup_inner(_args: ListStartupArgs) -> ListStartupOutput {
@@ -65,7 +65,7 @@ pub fn list_startup_inner(_args: ListStartupArgs) -> ListStartupOutput {
         Vec::new()
     };
 
-    let total_count = entries.len();
+    let total_count = entries.len() as i32;
     ListStartupOutput {
         entries,
         total_count,
