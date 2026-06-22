@@ -1,13 +1,11 @@
 [package]
-name = "rust-mcp-server-template"
+name = "windows-mcp-server"
 version = "0.1.0"
 edition = "2024"
-description = "Forkable Rust template for Model Context Protocol (MCP) servers, supporting stdio and streamable-HTTP transports."
-repository = "https://github.com/shoehn/rust-mcp-server-template"
-license = "AGPL-3.0-or-later"
-readme = "README.md"
-keywords = ["mcp", "rmcp", "ai", "tool-use", "template"]
-categories = ["network-programming", "api-bindings", "development-tools"]
+description = "A comprehensive Windows Management MCP Server"
+license = "MIT"
+keywords = ["mcp", "rmcp", "windows", "management"]
+categories = ["network-programming", "os"]
 
 [dependencies]
 anyhow = "1.0.102"
@@ -21,6 +19,7 @@ rmcp = { version = "1.6.0", features = [
 schemars = "1.0"
 serde = { version = "1.0.228", features = ["derive"] }
 serde_json = "1.0.149"
+sysinfo = "0.30"
 tokio = { version = "1.52.2", features = [
     "macros",
     "rt-multi-thread",
@@ -40,6 +39,18 @@ tokio = { version = "1.52.2", features = ["io-util", "macros", "rt-multi-thread"
 # `client` feature is needed only by the integration test, which drives a
 # round-trip tool call through an in-process MCP client/server pair.
 rmcp = { version = "1.6.0", features = ["client"] }
+
+[target.'cfg(windows)'.dependencies]
+windows = { version = "0.62", features = [
+    "Win32_System_Threading",
+    "Win32_System_ProcessStatus",
+    "Win32_System_Registry",
+    "Win32_System_SystemInformation",
+    "Win32_System_SystemServices",
+    "Win32_Storage_FileSystem",
+    "Win32_Security",
+    "Win32_NetworkManagement_NetManagement",
+] }
 
 [lints.clippy]
 # Enable default clippy groups

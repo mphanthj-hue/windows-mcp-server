@@ -1,4 +1,4 @@
-//! Library surface for the `rust-mcp-server-template` crate.
+//! Library surface for the `windows-mcp-server` crate.
 //!
 //! Re-exports everything `tests/` and downstream code may need so that
 //! integration tests can drive the server without subprocess gymnastics.

@@ -9,7 +9,7 @@ use rmcp::{
     ServiceExt,
     model::{CallToolRequestParams, RawContent},
 };
-use rust_mcp_server_template::McpServerHandler;
+use windows_mcp_server::McpServerHandler;
 use tokio::io::duplex;
 
 #[tokio::test]

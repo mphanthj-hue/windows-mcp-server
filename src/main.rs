@@ -1,5 +1,5 @@
 use anyhow::Result;
-use rust_mcp_server_template::{Cli, Config, observability, server};
+use windows_mcp_server::{Cli, Config, observability, server};
 
 #[tokio::main]
 async fn main() -> Result<()> {

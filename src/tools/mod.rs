@@ -6,7 +6,20 @@
 //! layers) into the `rmcp::ErrorData` type expected at handler return
 //! sites.
 
+pub mod disk;
+pub mod eventlog;
+pub mod network;
+pub mod performance;
 pub mod ping;
+pub mod process;
+pub mod registry;
+pub mod service;
+pub mod startup;
+pub mod sysinfo_advanced;
+pub mod system;
+pub mod task;
+pub mod user;
+pub mod windowsupdate;
 
 use rmcp::ErrorData;
 
